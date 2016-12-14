@@ -13,16 +13,16 @@ import java.util.Scanner;
  */
 public class ReaderThread implements Runnable{
 
-    static BigInteger bigInteger;
-    static final Object monitor = new Object();;
-    String name;
-    static int id;
-    String filePath;
+    private static BigInteger bigInteger;
+    private static final Object monitor;
+    private String filePath;
+
+    static {
+        monitor = new Object();
+    }
 
     ReaderThread(String path){
-        id++;
         bigInteger = BigInteger.ZERO;
-        this.name = "Thread " + id;
         filePath = path;
     }
 
@@ -32,12 +32,12 @@ public class ReaderThread implements Runnable{
         synchronized (monitor) {
             bigInteger = bigInteger.add(getResource());
 
-            System.out.print(name + " ");
+            System.out.print(Thread.currentThread().getName() + " ");
             System.out.printf( "%, d", bigInteger);
             System.out.println();
 
             try {
-                synchronized (this.monitor) {
+                synchronized (monitor) {
                     monitor.wait(1000);
                 }
             } catch (InterruptedException e) {
@@ -47,20 +47,20 @@ public class ReaderThread implements Runnable{
     }
 
     private BigInteger getResource(){
-        Scanner scanner = null;
-        int tmp1;
-        BigInteger tmp2 = BigInteger.ZERO;
+        Scanner scanner;
+        int nextInt;
+        BigInteger sum = BigInteger.ZERO;
         try {
             scanner = new Scanner(new File(filePath));
             while(scanner.hasNextInt()){
-                tmp1 = scanner.nextInt();
-                if((tmp1 > 0) && (tmp1 % 2 == 0)){
-                    tmp2 = tmp2.add(BigInteger.valueOf(tmp1));
+                nextInt = scanner.nextInt();
+                if((nextInt > 0) && (nextInt & 1) == 0){
+                    sum = sum.add(BigInteger.valueOf(nextInt));
                 }
             }
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
-        return tmp2;
+        return sum;
     }
 }
