@@ -23,8 +23,6 @@ if(versionFile.canRead()){
 
 apply plugin: 'java'
 
-sourceCompatibility = 1.8
-
 repositories {
     mavenCentral()
 }
@@ -36,7 +34,6 @@ dependencies {
     //compile group: 'org.slf4j', name: 'slf4j-simple', version: '1.7.21'
     compile group: 'org.slf4j', name: 'slf4j-log4j12', version: '1.7.21'
 
-
 }
 
 jar {
@@ -45,9 +42,5 @@ jar {
         attributes "Main-Class": "ru.kkiselev.Main"
     }
 
-}
-
-task print{
-    print "hello worldnah!"
 }
 
