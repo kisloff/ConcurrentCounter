@@ -13,19 +13,14 @@ import java.util.Random;
  * Класс создает текстовые файлы и заполняет их случайными числами типа int
  *
  */
-public class CaseGenerator {
+class CaseGenerator {
 
-    static List<File> files;
-    PrintWriter out;
-    int qty;
-    ArrayList<String> paths;
+    private static List<File> files;
+    private ArrayList<String> paths;
 
-    public CaseGenerator(){}
-
-    {
+    CaseGenerator(int qty) {
         files = new ArrayList<>();
         paths = new ArrayList<>();
-        qty = 100;
         generateFiles(qty);
         fillFile(files);
         fillPaths();
@@ -37,21 +32,18 @@ public class CaseGenerator {
         }
     }
 
-    public int generateRandomInt(){
-        Random random = new Random();
-        int x = random.nextInt();
-        return x;
+    private int generateRandomInt(){
+        return new Random().nextInt();
     }
 
-    public void fillFile(List<File> files){
-        for (int i = 0; i < files.size(); i++) {
+    private void fillFile(List<File> files){
+        for (File file : files) {
             try {
-                out = new PrintWriter(files.get(i));
+                PrintWriter out = new PrintWriter(file);
                 for (int j = 0; j < 1000; j++) {
                     out.println(generateRandomInt());
                 }
                 out.close();
-
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             }
@@ -59,8 +51,8 @@ public class CaseGenerator {
     }
 
     private void fillPaths(){
-        for (int i = 0; i < files.size(); i++) {
-            paths.add(files.get(i).getAbsolutePath());
+        for (File file : files) {
+            paths.add(file.getAbsolutePath());
         }
     }
 
