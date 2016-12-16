@@ -1,5 +1,8 @@
 package concurrent_counter;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * Created by kv on 10.12.16.
  *
@@ -8,15 +11,21 @@ package concurrent_counter;
  * Считывание происходит параллельно.
  *
  */
-public class Main {
+public class CounterMain {
+
+    public static Logger logger = LoggerFactory.getLogger(CounterMain.class);
 
     private final static int filesQuantity = 100;
 
+
     public static void main(String[] args) {
-        CaseGenerator cg = new CaseGenerator(filesQuantity);
+
+        logger.warn("concurrent_counter CounterMain ");
+
+        CaseGenerator cg = new CaseGenerator(filesQuantity, 1000);
 
         for (int i = 0; i < filesQuantity; i++) {
-            new Thread(new ReaderThread(cg.getFilePath(i))).start();
+            new Thread(new ReaderThread(CaseGenerator.getFilePath(i))).start();
         }
 
         try {

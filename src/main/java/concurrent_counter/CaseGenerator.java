@@ -1,5 +1,8 @@
 package concurrent_counter;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
@@ -15,14 +18,15 @@ import java.util.Random;
  */
 class CaseGenerator {
 
+    public static Logger logger = LoggerFactory.getLogger(concurrent_counter.CaseGenerator.class);
     private static List<File> files;
-    private ArrayList<String> paths;
+    private static ArrayList<String> paths;
 
-    CaseGenerator(int qty) {
+    CaseGenerator(int filesQty, int intQty) {
         files = new ArrayList<>();
         paths = new ArrayList<>();
-        generateFiles(qty);
-        fillFile(files);
+        generateFiles(filesQty);
+        fillFile(files, intQty);
         fillPaths();
     }
 
@@ -36,11 +40,11 @@ class CaseGenerator {
         return new Random().nextInt();
     }
 
-    private void fillFile(List<File> files){
+    private void fillFile(List<File> files, int intQty){
         for (File file : files) {
             try {
                 PrintWriter out = new PrintWriter(file);
-                for (int j = 0; j < 1000; j++) {
+                for (int j = 0; j < intQty; j++) {
                     out.println(generateRandomInt());
                 }
                 out.close();
@@ -56,7 +60,7 @@ class CaseGenerator {
         }
     }
 
-    String getFilePath(int i){
+    static String getFilePath(int i){
         return paths.get(i);
     }
 }

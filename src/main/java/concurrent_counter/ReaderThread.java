@@ -1,6 +1,5 @@
 package concurrent_counter;
 
-import com.sun.deploy.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,6 +22,7 @@ public class ReaderThread implements Runnable{
     private static BigInteger bigInteger;
     private static final Object monitor;
     private String filePath;
+    private Scanner scanner;
     static volatile boolean isInputValid = true;
     public static Logger logger = LoggerFactory.getLogger(concurrent_counter.ReaderThread.class);
 
@@ -38,63 +38,42 @@ public class ReaderThread implements Runnable{
     @Override
     public void run() {
 
-       // while (isInputValid) {
-            synchronized (monitor) {
-                bigInteger = bigInteger.add(getResource());
+        checkResourceAvailable();
 
-                System.out.print(Thread.currentThread().getName() + " ");
-                System.out.printf("%, d", bigInteger);
-                System.out.println();
+        int toIncrement = 0;
 
-                try {
-                    synchronized (monitor) {
+        while(scanner.hasNextInt() /*&& isInputValid*/){
+            toIncrement = scanner.nextInt();
+            if(validInt(toIncrement)) {
+                synchronized (monitor) {
+                    bigInteger = bigInteger.add(BigInteger.valueOf(toIncrement));
+                    logger.info(Thread.currentThread().getName() + " generated int " + toIncrement + " new sum is "+ bigInteger);
+
+                    try {
                         monitor.wait(1000);
+                    } catch (InterruptedException e) {
+                        logger.warn(e.getMessage());
                     }
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
                 }
+            } else{
+                ;
             }
-        //}
+        }
     }
 
-    private BigInteger getResource(){
-        Scanner scanner;
-        int nextInt;
-        String nextString;
-        BigInteger sum = BigInteger.ZERO;
+    private void checkResourceAvailable(){
         try {
             scanner = new Scanner(new File(filePath));
-            while(scanner.hasNext()){
-                //nextInt = scanner.nextInt();
-                nextString = scanner.nextLine();
-                if(nextString.matches("-?\\d+(\\.\\d+)?")){
-                    nextInt = Integer.parseInt(nextString);
-                    if((nextInt > 0) && (nextInt & 1) == 0) {
-                        sum = sum.add(BigInteger.valueOf(nextInt));
-                    }
-                } else {
-                    isInputValid = false;
-                    Runtime runtime = getRuntime();
-                    try {
-                        Process process = runtime.exec("clear");
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    System.out.println("Неверный формат данных");
-
-                }
-            }
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } finally {
-            isInputValid = false;
+            logger.warn(e.getMessage());
         }
-
-        return sum;
     }
 
-
-    private void validateInput(){
-
+    private boolean validInt(int toIncrement){
+        if((toIncrement > 0) && (toIncrement & 1) == 0){
+            return true;
+        } else {
+            return false;
+        }
     }
 }
