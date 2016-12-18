@@ -7,4 +7,8 @@ public class HelloWorld {
     public static void main(String[] args) {
         Main.logger.warn("HelloWorld");
     }
+
+    public int sum(int i, int i1) {
+        return i+i1;
+    }
 }

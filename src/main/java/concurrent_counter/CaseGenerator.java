@@ -16,11 +16,12 @@ import java.util.Random;
  * Класс создает текстовые файлы и заполняет их случайными числами типа int
  *
  */
+
 class CaseGenerator {
 
     public static Logger logger = LoggerFactory.getLogger(concurrent_counter.CaseGenerator.class);
-    private static List<File> files;
-    private static ArrayList<String> paths;
+    private List<File> files;
+    private ArrayList<String> paths;
 
     CaseGenerator(int filesQty, int intQty) {
         files = new ArrayList<>();
@@ -60,7 +61,7 @@ class CaseGenerator {
         }
     }
 
-    static String getFilePath(int i){
+    String getFilePath(int i){
         return paths.get(i);
     }
 }

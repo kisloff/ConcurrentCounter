@@ -20,6 +20,8 @@ public class Main {
 
         login("user", "user");
 
+
+
 /*
         System.out.println("РАБОТАЕТ 8)");
         System.out.println("РАБОТАЕТ 8)");
@@ -60,19 +62,16 @@ public class Main {
 
     private static void findAllFiles(File dir){
         File[] files = dir.listFiles();
-        File log = new File("/Users/kv/Documents/Innopolis/projects/versions/changelog.txt");
         if(files != null){
             for(File child: files){
                 if(child.isDirectory()){
                     DateFormat df = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
                     String changeDate = df.format(child.lastModified());
-                    //System.out.println("directotry " + child.getName() + " last modified " + changeDate);
                     logger.warn("directotry " + child.getName() + " last modified " + changeDate);
                     findAllFiles(new File(child.getPath()));
                 } else if(child.isFile()){
                     DateFormat df = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
                     String changeDate = df.format(child.lastModified());
-                    //System.out.println("file " + child.getName() + " last modified " + changeDate);
                     logger.warn("file " + child.getName() + " last modified " + changeDate);
                 }
             }
