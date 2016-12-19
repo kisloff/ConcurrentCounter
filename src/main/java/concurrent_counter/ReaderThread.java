@@ -41,15 +41,14 @@ public class ReaderThread implements Runnable {
         checkResourceAvailable(filePath);
         int toIncrement = 0;
 
-        while (scanner.hasNextLine() && isInputValid) {
+        while (isInputValid) {
 
-            /*
             if (!scanner.hasNextInt()) {
                 isInputValid = false;
                 logger.warn("not valid input " + scanner.nextLine());
-            };*/
+            };
 
-            while (scanner.hasNextInt()) {
+            while (scanner.hasNextInt() && isInputValid) {
 
                 toIncrement = scanner.nextInt();
                 if (iv.validInput(toIncrement)) {
@@ -58,7 +57,8 @@ public class ReaderThread implements Runnable {
                         logger.info(Thread.currentThread().getName() + " generated int " + toIncrement + " new sum is " + bigInteger);
                     }
                 } else {
-                    ;
+                    //isInputValid = false;
+                    //logger.warn("not valid input " + scanner.nextLine());
                 }
             }
         }
